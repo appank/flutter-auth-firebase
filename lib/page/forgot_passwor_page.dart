@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -5,7 +7,6 @@ import 'package:flutter_login_auth_firebase/widget/my_button.dart';
 import 'package:flutter_login_auth_firebase/widget/my_textfile.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
-  // final Function()? onTap;
   const ForgotPasswordPage({Key? key}) : super(key: key);
 
   @override
@@ -14,6 +15,36 @@ class ForgotPasswordPage extends StatefulWidget {
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final emailControler = TextEditingController();
+  @override
+  void dispose() {
+    emailControler.dispose();
+    super.dispose();
+  }
+
+  Future passwordReset() async {
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: emailControler.text.trim());
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text('Password reset link sent! Check your email'),
+            );
+          });
+    } on FirebaseAuthException catch (e) {
+      print(e);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(e.message.toString()),
+            );
+          });
+    }
+    ;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +86,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             ),
             MyTextFiled(
               controler: emailControler,
-              hintTex: 'Reset Password',
+              hintTex: 'Email',
               obscureText: false,
             ),
             SizedBox(
@@ -67,7 +98,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   MaterialButton(
-                    onPressed: () {},
+                    onPressed: passwordReset,
                     child: Text(
                       'Reset Password',
                       style: TextStyle(color: Colors.white),

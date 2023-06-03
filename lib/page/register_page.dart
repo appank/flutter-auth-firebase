@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login_auth_firebase/services/auth_service.dart';
 import 'package:flutter_login_auth_firebase/widget/my_button.dart';
 import 'package:flutter_login_auth_firebase/widget/my_imagebutton.dart';
 import 'package:flutter_login_auth_firebase/widget/my_textfile.dart';
@@ -144,12 +145,16 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  ImageButton(ImagePath: 'lib/image/google.png'),
+                children: [
+                  ImageButton(
+                      onTap: () {
+                        AuthService().signIWithGoogle();
+                      },
+                      ImagePath: 'lib/image/google.png'),
                   SizedBox(
                     width: 25,
                   ),
-                  ImageButton(ImagePath: 'lib/image/facebook.png')
+                  ImageButton(onTap: () {}, ImagePath: 'lib/image/facebook.png')
                 ],
               ),
               const SizedBox(
